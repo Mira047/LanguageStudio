@@ -105,10 +105,10 @@ public record LanguageInfo(String name, String identifier, String version, Strin
                 '}';
     }
 
-    public LanguageMemory<?> getMemory() {
-        return registry.getMemory();
-    }
-
+    /**
+     * Returns the instructions registered to this language.
+     * @return the instructions registered to this language.
+     */
     public HashMap<SerializablePredicate<List<String>>, Instruction> getInstructions() {
         return registry.getInstructions();
     }

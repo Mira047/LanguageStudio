@@ -1,6 +1,7 @@
 package com.mira.languagestudio.interpreter;
 
 import com.mira.languagestudio.core.base.Interpreter;
+import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.factory.internal.Instruction;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 import com.mira.languagestudio.core.util.SerializablePredicate;
@@ -38,5 +39,10 @@ public class InterpreterImpl implements Interpreter {
     @Override
     public void load(LanguageInfo languageInfo) {
         this.info = languageInfo;
+    }
+
+    @Override
+    public LanguageMemory<?> getMemory() {
+        return null;
     }
 }

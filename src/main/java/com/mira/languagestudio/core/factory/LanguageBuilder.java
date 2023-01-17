@@ -49,7 +49,7 @@ public class LanguageBuilder {
     private LanguageBuilder() {
         registry = new Registry();
 
-        memoryTypeOf(new HashMemory());
+        memoryTypeOf(HashMemory.class);
     }
 
     /**
@@ -129,18 +129,16 @@ public class LanguageBuilder {
         return this;
     }
 
-    public LanguageBuilder memoryTypeOf(LanguageMemory<?> memory) {
+    /**
+     * Sets the type of the memory used by the language.
+     *
+     * @param memory the type of the memory used by the language.
+     */
+    public LanguageBuilder memoryTypeOf(Class<? extends LanguageMemory<?>> memory) {
         registry.memoryTypeOf(memory);
         return this;
     }
 
-    public static LanguageMemory<?> getMemoryReference(LanguageBuilder builder) {
-        return builder.getMemoryReference();
-    }
-
-    public LanguageMemory<?> getMemoryReference() {
-        return registry.getMemory();
-    }
 
     /**
      * Loads the default instructions from a path.
@@ -194,14 +192,14 @@ public class LanguageBuilder {
 
         private final HashMap<SerializablePredicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
 
-        private LanguageMemory<?> memory;
+        private Class<? extends LanguageMemory<?>> memoryType = HashMemory.class;
 
         protected Registry() {
 
         }
 
-        protected void memoryTypeOf(LanguageMemory<?> memory) {
-            this.memory = memory;
+        protected void memoryTypeOf(Class<? extends LanguageMemory<?>> memory) {
+            memoryType = memory;
         }
 
         protected void register(String name, Instruction instruction) {
@@ -225,10 +223,12 @@ public class LanguageBuilder {
             loader.load();
         }
 
-        public LanguageMemory<?> getMemory() {
-            return memory;
-        }
-
+        /**
+         * Returns a map of the instructions that are registered for the language.
+         *
+         * <p> The map contains both the default instructions and the custom instructions.
+         * @return a map of the instructions that are registered for the language.
+         */
         public HashMap<SerializablePredicate<List<String>>, Instruction> getInstructions() {
             HashMap<SerializablePredicate<List<String>>, Instruction> instructions = new HashMap<>();
 

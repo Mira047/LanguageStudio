@@ -1,6 +1,7 @@
 package com.mira.languagestudio.core.base;
 
 
+import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 
 import java.util.List;
@@ -35,4 +36,6 @@ public interface Interpreter {
      * @param languageInfo the {@code LanguageInfo} object containing the instructions and settings of the language to load.
      */
     void load(LanguageInfo languageInfo);
+
+    LanguageMemory<?> getMemory();
 }
