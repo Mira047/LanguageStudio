@@ -1,4 +1,6 @@
-package com.mira.languagestudio.core.base.memory;
+package com.mira.languagestudio.core.base.types;
+
+import com.mira.languagestudio.core.base.LanguageMemory;
 
 import java.util.HashMap;
 

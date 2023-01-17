@@ -1,4 +1,6 @@
-package com.mira.languagestudio.interpreter.parser;
+package com.mira.languagestudio.external.interpreter.parser;
+
+import com.mira.languagestudio.core.factory.syntax.SyntaxBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,10 @@ public class Lexer {
     public Lexer(String input) {
         this.input = input;
         c = input.charAt(p);
+    }
+
+    public Lexer(SyntaxBuilder builder) {
+        this(builder.toString());
     }
 
     public void reset(String input) {
@@ -35,8 +41,7 @@ public class Lexer {
             String token = tokens.get(i);
 
             switch (token) {
-                case "+":
-                case "-":
+                case "+", "-" -> {
                     if (i + 1 < tokens.size()) {
                         String nextToken = tokens.get(i + 1);
 
@@ -48,14 +53,8 @@ public class Lexer {
                             tokens.remove(i + 1);
                         }
                     }
-                    break;
-                case "*":
-                case "/":
-                case "%":
-                case "!":
-                case "=":
-                case ">":
-                case "<":
+                }
+                case "*", "/", "%", "!", "=", ">", "<" -> {
                     if (i + 1 < tokens.size()) {
                         String nextToken = tokens.get(i + 1);
 
@@ -64,9 +63,8 @@ public class Lexer {
                             tokens.remove(i + 1);
                         }
                     }
-                    break;
-                case "|":
-                case "&":
+                }
+                case "|", "&" -> {
                     if (i + 1 < tokens.size()) {
                         String nextToken = tokens.get(i + 1);
 
@@ -75,7 +73,7 @@ public class Lexer {
                             tokens.remove(i + 1);
                         }
                     }
-                    break;
+                }
             }
         }
 

@@ -1,13 +1,14 @@
 package com.mira.languagestudio.core.factory.settings;
 
-import com.mira.languagestudio.core.base.memory.LanguageMemory;
+import com.mira.languagestudio.core.base.LanguageMemory;
 import com.mira.languagestudio.core.factory.LanguageBuilder;
-import com.mira.languagestudio.core.factory.internal.Instruction;
-import com.mira.languagestudio.core.util.SerializablePredicate;
+import com.mira.languagestudio.core.base.tasks.Instruction;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * The {@code LanguageInfo} class contains all the information and settings of a language.
@@ -93,7 +94,7 @@ public record LanguageInfo(String name, String identifier, String version, Strin
     }
 
     /**
-     * Exports the language information to a string.
+     * Exports the language information to a string, for debugging purposes.
      */
     public String export() {
         return "LanguageInfo{" +
@@ -107,9 +108,10 @@ public record LanguageInfo(String name, String identifier, String version, Strin
 
     /**
      * Returns the instructions registered to this language.
+     *
      * @return the instructions registered to this language.
      */
-    public HashMap<SerializablePredicate<List<String>>, Instruction> getInstructions() {
+    public HashMap<Predicate<List<String>>, Instruction> getInstructions() {
         return registry.getInstructions();
     }
 }

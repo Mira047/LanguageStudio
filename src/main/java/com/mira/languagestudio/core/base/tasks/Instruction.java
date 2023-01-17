@@ -1,10 +1,10 @@
-package com.mira.languagestudio.core.factory.internal;
+package com.mira.languagestudio.core.base.tasks;
 
-import com.mira.languagestudio.core.util.SerializableConsumer;
+import com.mira.languagestudio.core.base.LanguageMemory;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * The {@code Instruction} record represents a single instruction of the language that can be executed.
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  *
  * @since 1.0
  */
-public record Instruction(SerializableConsumer<List<String>> implementation) implements Serializable {
+public record Instruction(BiConsumer<List<String>, LanguageMemory<?>> implementation) implements Serializable {
 
     /**
      * Appends another instruction to this one, creating a new instruction that will execute both instructions in sequence.
@@ -24,7 +24,7 @@ public record Instruction(SerializableConsumer<List<String>> implementation) imp
      * @return a new instruction that will execute both instructions in sequence
      */
     public Instruction append(Instruction instruction) {
-        return new Instruction((SerializableConsumer<List<String>>) implementation.andThen(instruction.implementation));
+        return new Instruction((implementation.andThen(instruction.implementation)));
     }
 
     /**
@@ -32,7 +32,7 @@ public record Instruction(SerializableConsumer<List<String>> implementation) imp
      *
      * @param args the arguments to be passed to the instruction's implementation.
      */
-    public void execute(List<String> args) {
-        implementation.accept(args);
+    public void execute(LanguageMemory<?> memory, List<String> args) {
+        implementation.accept(args, memory);
     }
 }

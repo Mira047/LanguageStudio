@@ -1,19 +1,20 @@
 package com.mira.languagestudio.core.factory;
 
-import com.mira.languagestudio.core.base.memory.HashMemory;
-import com.mira.languagestudio.core.base.memory.LanguageMemory;
+import com.mira.languagestudio.core.base.types.HashMemory;
+import com.mira.languagestudio.core.base.LanguageMemory;
 import com.mira.languagestudio.core.exception.BuildException;
-import com.mira.languagestudio.core.factory.internal.Instruction;
-import com.mira.languagestudio.core.factory.resourceloader.DefaultResourceLoader;
+import com.mira.languagestudio.core.base.tasks.Instruction;
+import com.mira.languagestudio.core.factory.resources.DefaultResourceLoader;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
-import com.mira.languagestudio.core.util.SerializableConsumer;
-import com.mira.languagestudio.core.util.SerializablePredicate;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * The {@code LanguageBuilder} class is used to create and configure a new language.
@@ -58,7 +59,7 @@ public class LanguageBuilder {
      * @param identifier the string identifier of the instruction.
      * @param implementation the implementation of the instruction as a {@code Consumer} of {@code List<String>}.
      */
-    public LanguageBuilder register(String identifier, SerializableConsumer<List<String>> implementation) {
+    public LanguageBuilder register(String identifier, BiConsumer<List<String>, LanguageMemory<?>> implementation) {
         registry.register(identifier, new Instruction(implementation));
         return this;
     }
@@ -69,7 +70,7 @@ public class LanguageBuilder {
      * @param predicate the predicate to match the instruction.
      * @param implementation the implementation of the instruction as a {@code Consumer} of {@code List<String>}.
      */
-    public LanguageBuilder register(SerializablePredicate<List<String>> predicate, SerializableConsumer<List<String>> implementation) {
+    public LanguageBuilder register(Predicate<List<String>> predicate, BiConsumer<List<String>, LanguageMemory<?>> implementation) {
         registry.register(predicate, new Instruction(implementation));
         return this;
     }
@@ -160,7 +161,7 @@ public class LanguageBuilder {
      */
     public LanguageBuilder loadDefaults() {
         try {
-            Path path = Path.of(getClass().getClassLoader().getResource("data/" + identifier + "/language-info.json").toURI());
+            Path path = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource("data/" + identifier + "/language-info.json")).toURI());
 
             registry.loadDefaults(path);
         } catch (URISyntaxException | BuildException | NullPointerException e) {
@@ -188,9 +189,9 @@ public class LanguageBuilder {
      * @since 1.0
      */
     public static class Registry implements Serializable {
-        private final HashMap<SerializablePredicate<List<String>>, Instruction> CUSTOM_IMPL = new HashMap<>();
+        private final HashMap<Predicate<List<String>>, Instruction> CUSTOM_IMPL = new HashMap<>();
 
-        private final HashMap<SerializablePredicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
+        private final HashMap<Predicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
 
         private Class<? extends LanguageMemory<?>> memoryType = HashMemory.class;
 
@@ -213,7 +214,7 @@ public class LanguageBuilder {
 
         }
 
-        protected void register(SerializablePredicate<List<String>> predicate, Instruction instruction) {
+        protected void register(Predicate<List<String>> predicate, Instruction instruction) {
             CUSTOM_IMPL.put(predicate, instruction);
         }
 
@@ -229,13 +230,20 @@ public class LanguageBuilder {
          * <p> The map contains both the default instructions and the custom instructions.
          * @return a map of the instructions that are registered for the language.
          */
-        public HashMap<SerializablePredicate<List<String>>, Instruction> getInstructions() {
-            HashMap<SerializablePredicate<List<String>>, Instruction> instructions = new HashMap<>();
+        public HashMap<Predicate<List<String>>, Instruction> getInstructions() {
+            HashMap<Predicate<List<String>>, Instruction> instructions = new HashMap<>();
 
             instructions.putAll(DEFAULT_IMPL);
             instructions.putAll(CUSTOM_IMPL);
 
             return instructions;
+        }
+
+        /**
+         * @return the type of the memory used by the language.
+         */
+        public Class<? extends LanguageMemory<?>> getMemoryType() {
+            return memoryType;
         }
     }
 }

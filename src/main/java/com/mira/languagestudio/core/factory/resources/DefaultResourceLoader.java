@@ -1,4 +1,4 @@
-package com.mira.languagestudio.core.factory.resourceloader;
+package com.mira.languagestudio.core.factory.resources;
 
 import com.mira.languagestudio.core.factory.LanguageBuilder;
 

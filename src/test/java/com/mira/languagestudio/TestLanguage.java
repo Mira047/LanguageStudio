@@ -1,31 +1,28 @@
 package com.mira.languagestudio;
 
-import com.mira.languagestudio.core.base.memory.HashMemory;
-import com.mira.languagestudio.core.factory.LanguageBuilder;
-import com.mira.languagestudio.core.factory.settings.LanguageInfo;
+import com.mira.languagestudio.core.factory.syntax.Syntax;
 import com.mira.languagestudio.core.factory.syntax.SyntaxBuilder;
-import com.mira.languagestudio.core.factory.syntax.SyntaxObject;
-import com.mira.languagestudio.core.util.SerializableConsumer;
-import com.mira.languagestudio.interpreter.InterpreterImpl;
-import com.mira.languagestudio.interpreter.parser.Lexer;
+import com.mira.languagestudio.core.util.Pair;
+import com.mira.languagestudio.core.util.RegexConst;
+import com.mira.languagestudio.external.interpreter.parser.Lexer;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class TestLanguage {
     public static void main(String[] arg) {
-        SyntaxObject var_declaration = SyntaxBuilder.create("${0} ${1} ${2} ${3} ;")
-                .regexOf("${0}", "int|float|double|char|String")
-                .regexOf("${1}", "[a-zA-Z_][a-zA-Z0-9_]*")
-                .regexOf("${2}", "=|+=|-=|\\*=|/=")
-                .regexOf("${3}", "[a-zA-Z_][a-zA-Z0-9_]*")
-                .build();
+        SyntaxBuilder syntaxBuilder = SyntaxBuilder.create()
+                .addRegex(0, s -> s.matches("var"))
+                .addRegex(1, s -> s.matches(RegexConst.IDENTIFIER))
+                .addRegex(2, s -> s.matches("="))
+                .addRegexToLength(0, s -> s.matches(";"));
 
-        Lexer lexer = new Lexer("int a = b;");
 
-        System.out.println(var_declaration.test(lexer.tokenize()));
+        Syntax syntax = syntaxBuilder.build();
+
+        Lexer lexer = new Lexer("var a = sus sus sus;");
+
+        List<String> tokens = lexer.tokenize();
+
+        System.out.println("SYNTAX TEST: " + syntax.test(tokens));
     }
 }

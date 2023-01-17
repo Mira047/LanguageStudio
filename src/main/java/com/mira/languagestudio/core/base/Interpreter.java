@@ -1,7 +1,6 @@
 package com.mira.languagestudio.core.base;
 
 
-import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 
 import java.util.List;
@@ -37,5 +36,12 @@ public interface Interpreter {
      */
     void load(LanguageInfo languageInfo);
 
+    /**
+     * Returns the {@link LanguageMemory} currently in use by the interpreter.
+     *
+     * <p>This method can be used to access and manipulate the memory of the interpreter.
+     *
+     * @return the {@link LanguageMemory} currently in use by the interpreter
+     */
     LanguageMemory<?> getMemory();
 }
