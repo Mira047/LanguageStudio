@@ -2,6 +2,8 @@ package com.mira.languagestudio.core.factory.settings;
 
 import com.mira.languagestudio.core.factory.LanguageBuilder;
 
+import java.io.Serializable;
+
 /**
  * The {@code LanguageInfo} class contains all the information and settings of a language.
  *
@@ -9,8 +11,8 @@ import com.mira.languagestudio.core.factory.LanguageBuilder;
  *
  * @since 1.0
  */
-public record LanguageInfo(String name, String identifier, String version, String author, String description,
-                           LanguageBuilder.Registry registry) {
+public record LanguageInfo(String name, String identifier, String version, String author, String description/*,
+                           LanguageBuilder.Registry registry*/) implements Serializable {
 
     /**
      * Creates a new instance of {@code LanguageInfo}.
@@ -20,7 +22,7 @@ public record LanguageInfo(String name, String identifier, String version, Strin
      * @param version     the version of the language.
      * @param author      the author of the language.
      * @param description the description of the language.
-     * @param registry    the registry of instructions of the language.
+
      */
     public LanguageInfo {
     }
@@ -80,8 +82,21 @@ public record LanguageInfo(String name, String identifier, String version, Strin
      *
      * @return the registry of instructions of the language.
      */
-    @Override
-    public LanguageBuilder.Registry registry() {
-        return registry;
+//    @Override
+//    public LanguageBuilder.Registry registry() {
+//        return registry;
+//    }
+
+    /**
+     * Exports the language information to a string.
+     */
+    public String export() {
+        return "LanguageInfo{" +
+                "name='" + name + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", version='" + version + '\'' +
+                ", author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

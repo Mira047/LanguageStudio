@@ -5,6 +5,8 @@ import com.mira.languagestudio.core.factory.LanguageBuilder;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -20,14 +22,17 @@ public class TestLanguage {
                 .build();
 
         try {
-            File f = new File(TestLanguage.class.getClassLoader().getResource("data/" + info.identifier() + "/language-info.json").toURI());
-
-            List<String> lines = Files.readAllLines(f.toPath());
-            for(String line : lines) {
-                System.out.println(line);
-            }
+            File f = new File("D:/Projects/LanguageStudio/src/test/resources/data/test/languageInfo.ser");
+            System.out.println(Files.readAllLines(f.toPath()));
+            FileOutputStream fileOut = new FileOutputStream(f);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(info);
+            out.close();
+            fileOut.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println(info.export());
     }
 }

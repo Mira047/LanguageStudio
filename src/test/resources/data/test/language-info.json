@@ -21,8 +21,8 @@
 
     "libraries": [
         {
-            "file": "${dir}/builtin/standard.json",
-            "name": "STD"
+            "file": "${dir}/builtin/math.json",
+            "name": "Math"
         }
     ]
 }

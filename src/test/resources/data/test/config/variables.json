@@ -1,3 +1,36 @@
 {
+    "configuration": [
+        {
+            "body": [
+                "${1:var} ${2:name} = ${3:value}"
+            ],
+            "regex": {
+                "1": "^(var|let|const)$",
+                "2": "^(\\w+)$",
+                "3": "^(\\w+)$"
+            },
+            "function": {
+                "type": "var-declaration",
+                "var": 1,
+                "name": 2,
+                "value": 3
+            }
+        },
 
+        {
+            "body": [
+                "${1:var} ${2:name}"
+            ],
+            "regex": {
+                "1": "^(var|let|const)$",
+                "2": "^(\\w+)$"
+            },
+            "function": {
+                "type": "var-declaration",
+                "var": 1,
+                "name": 2,
+                "value": null
+            }
+        }
+    ]
 }

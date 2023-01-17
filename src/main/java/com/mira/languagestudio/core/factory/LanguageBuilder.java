@@ -3,8 +3,10 @@ package com.mira.languagestudio.core.factory;
 import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.exception.BuildException;
 import com.mira.languagestudio.core.factory.internal.Instruction;
+import com.mira.languagestudio.core.factory.resourceloader.DefaultResourceLoader;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -147,17 +149,17 @@ public class LanguageBuilder {
     /**
      * Loads the default instructions from the resources' folder.
      */
-//    public LanguageBuilder loadDefaults() {
-//        try {
-//            Path path = Path.of(Path.of(getClass().getClassLoader().getResource("data").toString() + "/default");
-//
-//            registry.loadDefaults(path);
-//        } catch (URISyntaxException | BuildException | NullPointerException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return this;
-//    }
+    public LanguageBuilder loadDefaults() {
+        try {
+            Path path = Path.of(getClass().getClassLoader().getResource("data/" + identifier + "/language-info.json").toURI());
+
+            registry.loadDefaults(path);
+        } catch (URISyntaxException | BuildException | NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        return this;
+    }
 
     /**
      * Builds the {@code LanguageInfo} object that contains all the information and settings of the language.
@@ -165,7 +167,7 @@ public class LanguageBuilder {
      * @return {@code LanguageInfo} object that contains all the information and settings of the language.
      */
     public LanguageInfo build() {
-        return new LanguageInfo(name, identifier, version, author, description, registry);
+        return new LanguageInfo(name, identifier, version, author, description/*, registry*/);
     }
 
     /**
@@ -176,7 +178,7 @@ public class LanguageBuilder {
      *
      * @since 1.0
      */
-    public static class Registry {
+    public static class Registry implements Serializable {
         private final HashMap<Predicate<List<String>>, Instruction> CUSTOM_IMPL = new HashMap<>();
 
         private final HashMap<Predicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
@@ -200,7 +202,9 @@ public class LanguageBuilder {
         }
 
         protected void loadDefaults(Path path) throws BuildException {
-            // TODO: Load default instructions recursively from the specified path.
+            DefaultResourceLoader loader = new DefaultResourceLoader(this, path.toFile());
+
+            loader.load();
         }
 
         public HashMap<Predicate<List<String>>, Instruction> getRegistryContents() {
