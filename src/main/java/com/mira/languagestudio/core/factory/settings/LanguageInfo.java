@@ -1,5 +1,6 @@
 package com.mira.languagestudio.core.factory.settings;
 
+import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.factory.LanguageBuilder;
 
 import java.io.Serializable;
@@ -11,8 +12,8 @@ import java.io.Serializable;
  *
  * @since 1.0
  */
-public record LanguageInfo(String name, String identifier, String version, String author, String description/*,
-                           LanguageBuilder.Registry registry*/) implements Serializable {
+public record LanguageInfo(String name, String identifier, String version, String author, String description,
+                           LanguageBuilder.Registry registry) implements Serializable {
 
     /**
      * Creates a new instance of {@code LanguageInfo}.
@@ -22,7 +23,7 @@ public record LanguageInfo(String name, String identifier, String version, Strin
      * @param version     the version of the language.
      * @param author      the author of the language.
      * @param description the description of the language.
-
+     * @param registry    the registry of the language.
      */
     public LanguageInfo {
     }
@@ -82,10 +83,10 @@ public record LanguageInfo(String name, String identifier, String version, Strin
      *
      * @return the registry of instructions of the language.
      */
-//    @Override
-//    public LanguageBuilder.Registry registry() {
-//        return registry;
-//    }
+    @Override
+    public LanguageBuilder.Registry registry() {
+        return registry;
+    }
 
     /**
      * Exports the language information to a string.
@@ -98,5 +99,9 @@ public record LanguageInfo(String name, String identifier, String version, Strin
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public LanguageMemory<?> getMemory() {
+        return registry.getMemory();
     }
 }

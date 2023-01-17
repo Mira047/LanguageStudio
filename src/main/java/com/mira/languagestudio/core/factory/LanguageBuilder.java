@@ -1,10 +1,13 @@
 package com.mira.languagestudio.core.factory;
 
+import com.mira.languagestudio.core.base.memory.HashMemory;
 import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.exception.BuildException;
 import com.mira.languagestudio.core.factory.internal.Instruction;
 import com.mira.languagestudio.core.factory.resourceloader.DefaultResourceLoader;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
+import com.mira.languagestudio.core.util.SerializableConsumer;
+import com.mira.languagestudio.core.util.SerializablePredicate;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
@@ -55,10 +58,10 @@ public class LanguageBuilder {
      * @param identifier the string identifier of the instruction.
      * @param implementation the implementation of the instruction as a {@code Consumer} of {@code List<String>}.
      */
-    public LanguageBuilder register(String identifier, Consumer<List<String>> implementation) {
-        registry.register(identifier, new Instruction(implementation));
-        return this;
-    }
+//    public LanguageBuilder register(String identifier, SerializableConsumer<List<String>> implementation) {
+//        registry.register(identifier, new Instruction(implementation));
+//        return this;
+//    }
 
     /**
      * Registers a new instruction for the language using a predicate.
@@ -66,10 +69,10 @@ public class LanguageBuilder {
      * @param predicate the predicate to match the instruction.
      * @param implementation the implementation of the instruction as a {@code Consumer} of {@code List<String>}.
      */
-    public LanguageBuilder register(Predicate<List<String>> predicate, Consumer<List<String>> implementation) {
-        registry.register(predicate, new Instruction(implementation));
-        return this;
-    }
+//    public LanguageBuilder register(SerializablePredicate<List<String>> predicate, SerializableConsumer<List<String>> implementation) {
+//        registry.register(predicate, new Instruction(implementation));
+//        return this;
+//    }
 
     /**
      * Sets the name of the language.
@@ -167,7 +170,7 @@ public class LanguageBuilder {
      * @return {@code LanguageInfo} object that contains all the information and settings of the language.
      */
     public LanguageInfo build() {
-        return new LanguageInfo(name, identifier, version, author, description/*, registry*/);
+        return new LanguageInfo(name, identifier, version, author, description, registry);
     }
 
     /**
@@ -179,9 +182,9 @@ public class LanguageBuilder {
      * @since 1.0
      */
     public static class Registry implements Serializable {
-        private final HashMap<Predicate<List<String>>, Instruction> CUSTOM_IMPL = new HashMap<>();
-
-        private final HashMap<Predicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
+//        private final HashMap<SerializablePredicate<List<String>>, Instruction> CUSTOM_IMPL = new HashMap<>();
+//
+//        private final HashMap<SerializablePredicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
 
         private LanguageMemory<?> memory;
 
@@ -193,27 +196,18 @@ public class LanguageBuilder {
             this.memory = memory;
         }
 
-        protected void register(String name, Instruction instruction) {
-            CUSTOM_IMPL.put(args -> args.get(0).equals(name), instruction);
-        }
-
-        protected void register(Predicate<List<String>> predicate, Instruction instruction) {
-            CUSTOM_IMPL.put(predicate, instruction);
-        }
+//        protected void register(String name, Instruction instruction) {
+//            CUSTOM_IMPL.put(args -> args.get(0).equals(name), instruction);
+//        }
+//
+//        protected void register(SerializablePredicate<List<String>> predicate, Instruction instruction) {
+//            CUSTOM_IMPL.put(predicate, instruction);
+//        }
 
         protected void loadDefaults(Path path) throws BuildException {
             DefaultResourceLoader loader = new DefaultResourceLoader(this, path.toFile());
 
             loader.load();
-        }
-
-        public HashMap<Predicate<List<String>>, Instruction> getRegistryContents() {
-            HashMap<Predicate<List<String>>, Instruction> contents = new HashMap<>();
-
-            contents.putAll(DEFAULT_IMPL);
-            contents.putAll(CUSTOM_IMPL);
-
-            return contents;
         }
 
         public LanguageMemory<?> getMemory() {

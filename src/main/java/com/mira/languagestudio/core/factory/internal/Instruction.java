@@ -1,5 +1,7 @@
 package com.mira.languagestudio.core.factory.internal;
 
+import com.mira.languagestudio.core.util.SerializableConsumer;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;
@@ -13,7 +15,7 @@ import java.util.function.Consumer;
  *
  * @since 1.0
  */
-public record Instruction(Consumer<List<String>> implementation) implements Serializable {
+public record Instruction(SerializableConsumer<List<String>> implementation) implements Serializable {
 
     /**
      * Appends another instruction to this one, creating a new instruction that will execute both instructions in sequence.
@@ -22,7 +24,7 @@ public record Instruction(Consumer<List<String>> implementation) implements Seri
      * @return a new instruction that will execute both instructions in sequence
      */
     public Instruction append(Instruction instruction) {
-        return new Instruction(implementation.andThen(instruction.implementation));
+        return new Instruction((SerializableConsumer<List<String>>) implementation.andThen(instruction.implementation));
     }
 
     /**
