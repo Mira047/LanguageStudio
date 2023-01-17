@@ -6,6 +6,7 @@ import com.mira.languagestudio.core.exception.BuildException;
 import com.mira.languagestudio.core.base.tasks.Instruction;
 import com.mira.languagestudio.core.factory.resources.DefaultResourceLoader;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
+import com.mira.languagestudio.core.factory.syntax.Syntax;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
@@ -72,6 +73,11 @@ public class LanguageBuilder {
      */
     public LanguageBuilder register(Predicate<List<String>> predicate, BiConsumer<List<String>, LanguageMemory<?>> implementation) {
         registry.register(predicate, new Instruction(implementation));
+        return this;
+    }
+
+    public LanguageBuilder register(Syntax syntax, BiConsumer<List<String>, LanguageMemory<?>> implementation) {
+        registry.register(syntax::test, new Instruction(implementation));
         return this;
     }
 
@@ -240,6 +246,7 @@ public class LanguageBuilder {
         }
 
         /**
+         * Returns the type of memory that is being used by the language.
          * @return the type of the memory used by the language.
          */
         public Class<? extends LanguageMemory<?>> getMemoryType() {

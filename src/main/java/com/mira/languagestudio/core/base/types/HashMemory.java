@@ -16,6 +16,10 @@ import java.util.HashMap;
 public class HashMemory implements LanguageMemory<String> {
     private final HashMap<String, Object> memory = new HashMap<>();
 
+    /**
+     * Creates a new HashMemory instance
+     * @return the new HashMemory instance
+     */
     public static HashMemory create() {
         return new HashMemory();
     }

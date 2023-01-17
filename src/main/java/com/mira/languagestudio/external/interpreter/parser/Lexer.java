@@ -5,6 +5,12 @@ import com.mira.languagestudio.core.factory.syntax.SyntaxBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@code Lexer} class is used to split a line of code into tokens.
+ *
+ * <p>It also has additional uses. For example, putting the tokens from
+ * a string (That begin with a certain character) into a string</p>
+ */
 public class Lexer {
     public static final char EOF = '\0';
 
@@ -23,6 +29,10 @@ public class Lexer {
         this(builder.toString());
     }
 
+    /**
+     * Resets the lexer to a new input.
+     * @param input the new input
+     */
     public void reset(String input) {
         this.input = input;
 
@@ -32,6 +42,10 @@ public class Lexer {
         tokens.clear();
     }
 
+    /**
+     * Tokenizes the string and then returns the tokens.
+     * @return the tokens
+     */
     public List<String> tokenize() {
         while(c != '\0') {
             tokens.add(nextToken());
@@ -91,6 +105,10 @@ public class Lexer {
         }
     }
 
+    /**
+     * Returns the next token. Keep in mind, this method should not be used, unless you know what you are doing.
+     * @return the next token
+     */
     public String nextToken() {
         if(c == ' ' || c == '\t' || c == '\r') {
             WS();
