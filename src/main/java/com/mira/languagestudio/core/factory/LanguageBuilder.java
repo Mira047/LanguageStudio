@@ -1,6 +1,5 @@
 package com.mira.languagestudio.core.factory;
 
-import com.mira.languagestudio.core.base.memory.HashMemory;
 import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.exception.BuildException;
 import com.mira.languagestudio.core.factory.internal.Instruction;
@@ -14,8 +13,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * The {@code LanguageBuilder} class is used to create and configure a new language.
@@ -58,10 +55,10 @@ public class LanguageBuilder {
      * @param identifier the string identifier of the instruction.
      * @param implementation the implementation of the instruction as a {@code Consumer} of {@code List<String>}.
      */
-//    public LanguageBuilder register(String identifier, SerializableConsumer<List<String>> implementation) {
-//        registry.register(identifier, new Instruction(implementation));
-//        return this;
-//    }
+    public LanguageBuilder register(String identifier, SerializableConsumer<List<String>> implementation) {
+        registry.register(identifier, new Instruction(implementation));
+        return this;
+    }
 
     /**
      * Registers a new instruction for the language using a predicate.
@@ -69,10 +66,10 @@ public class LanguageBuilder {
      * @param predicate the predicate to match the instruction.
      * @param implementation the implementation of the instruction as a {@code Consumer} of {@code List<String>}.
      */
-//    public LanguageBuilder register(SerializablePredicate<List<String>> predicate, SerializableConsumer<List<String>> implementation) {
-//        registry.register(predicate, new Instruction(implementation));
-//        return this;
-//    }
+    public LanguageBuilder register(SerializablePredicate<List<String>> predicate, SerializableConsumer<List<String>> implementation) {
+        registry.register(predicate, new Instruction(implementation));
+        return this;
+    }
 
     /**
      * Sets the name of the language.
@@ -182,9 +179,9 @@ public class LanguageBuilder {
      * @since 1.0
      */
     public static class Registry implements Serializable {
-//        private final HashMap<SerializablePredicate<List<String>>, Instruction> CUSTOM_IMPL = new HashMap<>();
-//
-//        private final HashMap<SerializablePredicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
+        private final HashMap<SerializablePredicate<List<String>>, Instruction> CUSTOM_IMPL = new HashMap<>();
+
+        private final HashMap<SerializablePredicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
 
         private LanguageMemory<?> memory;
 
@@ -192,17 +189,28 @@ public class LanguageBuilder {
 
         }
 
+        public HashMap<SerializablePredicate<List<String>>, Instruction> getImpl() {
+            return CUSTOM_IMPL;
+        }
+
         protected void memoryTypeOf(LanguageMemory<?> memory) {
             this.memory = memory;
         }
 
-//        protected void register(String name, Instruction instruction) {
-//            CUSTOM_IMPL.put(args -> args.get(0).equals(name), instruction);
-//        }
-//
-//        protected void register(SerializablePredicate<List<String>> predicate, Instruction instruction) {
-//            CUSTOM_IMPL.put(predicate, instruction);
-//        }
+        protected void register(String name, Instruction instruction) {
+            CUSTOM_IMPL.put(args -> {
+                if (args.size() == 0) {
+                    return false;
+                }
+
+                return args.get(0).equals(name);
+            }, instruction);
+            }
+        }
+
+        protected void register(SerializablePredicate<List<String>> predicate, Instruction instruction) {
+            CUSTOM_IMPL.put(predicate, instruction);
+        }
 
         protected void loadDefaults(Path path) throws BuildException {
             DefaultResourceLoader loader = new DefaultResourceLoader(this, path.toFile());
