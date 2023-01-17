@@ -3,47 +3,46 @@ package com.mira.languagestudio;
 import com.mira.languagestudio.core.base.memory.HashMemory;
 import com.mira.languagestudio.core.factory.LanguageBuilder;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
+import com.mira.languagestudio.core.util.SerializableConsumer;
+import com.mira.languagestudio.interpreter.InterpreterImpl;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestLanguage {
     public static void main(String[] arg) {
-        LanguageInfo info = LanguageBuilder.create()
-                .withIdentifier("test")
-                .register("test", args -> System.out.println("Test"))
-//                .register("test2", args -> System.out.println("Test2"))
-//                .register(args -> args.get(0).equals("var") && args.get(2).equals("="), args -> System.out.println("Variable"))
-                .memoryTypeOf(HashMemory.create())
-//                .loadDefaults()
-                .build();
+        LanguageBuilder builder = LanguageBuilder.create()
+                .withName("Orbit")
+                .withIdentifier("orbit")
+                .withVersion("0.0.1")
+                .withAuthor("Mira")
+                .withDescription("A language for orbiting planets");
 
-        try {
-            File f = new File("D:/Projects/LanguageStudio/src/test/resources/data/test/languageInfo.ser");
-            // Serialize data object to a file
-//            FileOutputStream fileOut = new FileOutputStream(f);
-//            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-//            out.writeObject(info);
-//            out.close();
-//            fileOut.close();
-//            System.out.println("Serialized data is saved in " + f.getAbsolutePath());
+        builder.register("print", (List<String> args) -> System.out.println(args.get(1)))
+                .register((List<String> args) -> (args.get(0).equals("var") && args.get(2).equals("=")),
+                        (List<String> args) -> {
+                            if(builder.getMemoryReference() instanceof HashMemory memory) {
+                                if(!memory.contains(args.get(1))) {
+                                    memory.set(args.get(1), args.get(3));
 
-            // Now load the data to check if it is correct
-            FileInputStream fileIn = new FileInputStream(f);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            LanguageInfo info2 = (LanguageInfo) in.readObject();
-            in.close();
-            fileIn.close();
-            System.out.println(info2.export());
+                                    System.out.println("Set " + args.get(1) + " to " + args.get(3));
+                                } else {
+                                    throw new RuntimeException("Variable already exists");
+                                }
+                            }
+                        });
 
-            System.out.println(info2.registry().getImpl());
+        LanguageInfo info = builder.build();
 
+        InterpreterImpl interpreter = new InterpreterImpl();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        interpreter.load(info);
 
-
+        // Now some test code
+        interpreter.run("print \"hello world\"");
+        interpreter.run("var test = \"hello world\"");
     }
 }

@@ -1,5 +1,6 @@
 package com.mira.languagestudio.core.factory;
 
+import com.mira.languagestudio.core.base.memory.HashMemory;
 import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.exception.BuildException;
 import com.mira.languagestudio.core.factory.internal.Instruction;
@@ -47,6 +48,8 @@ public class LanguageBuilder {
 
     private LanguageBuilder() {
         registry = new Registry();
+
+        memoryTypeOf(new HashMemory());
     }
 
     /**
@@ -131,6 +134,14 @@ public class LanguageBuilder {
         return this;
     }
 
+    public static LanguageMemory<?> getMemoryReference(LanguageBuilder builder) {
+        return builder.getMemoryReference();
+    }
+
+    public LanguageMemory<?> getMemoryReference() {
+        return registry.getMemory();
+    }
+
     /**
      * Loads the default instructions from a path.
      *
@@ -189,10 +200,6 @@ public class LanguageBuilder {
 
         }
 
-        public HashMap<SerializablePredicate<List<String>>, Instruction> getImpl() {
-            return CUSTOM_IMPL;
-        }
-
         protected void memoryTypeOf(LanguageMemory<?> memory) {
             this.memory = memory;
         }
@@ -220,6 +227,15 @@ public class LanguageBuilder {
 
         public LanguageMemory<?> getMemory() {
             return memory;
+        }
+
+        public HashMap<SerializablePredicate<List<String>>, Instruction> getInstructions() {
+            HashMap<SerializablePredicate<List<String>>, Instruction> instructions = new HashMap<>();
+
+            instructions.putAll(DEFAULT_IMPL);
+            instructions.putAll(CUSTOM_IMPL);
+
+            return instructions;
         }
     }
 }

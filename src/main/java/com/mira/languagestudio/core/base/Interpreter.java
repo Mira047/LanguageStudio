@@ -28,28 +28,6 @@ public interface Interpreter {
     void run(String line);
 
     /**
-     * Runs a single line of code using the interpreter.
-     *
-     * @param line the line of code to be executed by the interpreter.
-     * @param isDebug a flag indicating whether the interpreter should run in debug mode.
-     */
-    void run(String line, boolean isDebug);
-
-    /**
-     * Enables or disables the debug mode of the interpreter.
-     *
-     * @param debug {@code true} to enable debug mode, {@code false} to disable it.
-     */
-    void setDebug(boolean debug);
-
-    /**
-     * Returns whether the interpreter is currently in debug mode.
-     *
-     * @return {@code true} if the interpreter is in debug mode, {@code false} otherwise.
-     */
-    boolean isDebug();
-
-    /**
      * Loads the specified {@code LanguageInfo} object into the interpreter.
      *
      * <p>This method will configure the interpreter to use the instructions and settings defined in the language represented by the {@code LanguageInfo} object.
