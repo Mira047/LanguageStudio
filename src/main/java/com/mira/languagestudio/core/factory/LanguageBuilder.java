@@ -205,7 +205,7 @@ public class LanguageBuilder {
 
                 return args.get(0).equals(name);
             }, instruction);
-            }
+
         }
 
         protected void register(SerializablePredicate<List<String>> predicate, Instruction instruction) {
