@@ -1,0 +1,28 @@
+{
+    "name": "Testing Language",
+    "version": "0.0.1",
+    "description": "Test Programming Language for Language Studio",
+    "author": "Mira",
+
+    "configurations": [
+        {
+            "file": "${dir}/config/variables.json",
+            "type": "variables"
+        },
+        {
+            "file": "${dir}/config/keywords.json",
+            "type": "keywords"
+        },
+        {
+            "file": "${dir}/config/if_statement.json",
+            "type": "if_statement"
+        }
+    ],
+
+    "libraries": [
+        {
+            "file": "${dir}/builtin/standard.json",
+            "name": "STD"
+        }
+    ]
+}

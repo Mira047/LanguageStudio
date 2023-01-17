@@ -1,9 +1,11 @@
 package com.mira.languagestudio.core.factory;
 
+import com.mira.languagestudio.core.base.memory.LanguageMemory;
 import com.mira.languagestudio.core.exception.BuildException;
 import com.mira.languagestudio.core.factory.internal.Instruction;
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -122,6 +124,11 @@ public class LanguageBuilder {
         return this;
     }
 
+    public LanguageBuilder memoryTypeOf(LanguageMemory<?> memory) {
+        registry.memoryTypeOf(memory);
+        return this;
+    }
+
     /**
      * Loads the default instructions from a path.
      *
@@ -136,6 +143,21 @@ public class LanguageBuilder {
 
         return this;
     }
+
+    /**
+     * Loads the default instructions from the resources' folder.
+     */
+//    public LanguageBuilder loadDefaults() {
+//        try {
+//            Path path = Path.of(Path.of(getClass().getClassLoader().getResource("data").toString() + "/default");
+//
+//            registry.loadDefaults(path);
+//        } catch (URISyntaxException | BuildException | NullPointerException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return this;
+//    }
 
     /**
      * Builds the {@code LanguageInfo} object that contains all the information and settings of the language.
@@ -159,8 +181,14 @@ public class LanguageBuilder {
 
         private final HashMap<Predicate<List<String>>, Instruction> DEFAULT_IMPL = new HashMap<>();
 
+        private LanguageMemory<?> memory;
+
         protected Registry() {
 
+        }
+
+        protected void memoryTypeOf(LanguageMemory<?> memory) {
+            this.memory = memory;
         }
 
         protected void register(String name, Instruction instruction) {
@@ -182,6 +210,10 @@ public class LanguageBuilder {
             contents.putAll(CUSTOM_IMPL);
 
             return contents;
+        }
+
+        public LanguageMemory<?> getMemory() {
+            return memory;
         }
     }
 }

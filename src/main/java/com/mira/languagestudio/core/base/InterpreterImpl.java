@@ -2,20 +2,22 @@ package com.mira.languagestudio.core.base;
 
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 
+import java.util.List;
+
 public class InterpreterImpl implements Interpreter {
 
     @Override
-    public void run(String code) {
+    public void run(List<String> code) {
 
     }
 
     @Override
-    public void runLine(String line) {
+    public void run(String line) {
 
     }
 
     @Override
-    public void runLine(String line, boolean isDebug) {
+    public void run(String line, boolean isDebug) {
 
     }
 

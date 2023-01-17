@@ -3,6 +3,8 @@ package com.mira.languagestudio.core.base;
 
 import com.mira.languagestudio.core.factory.settings.LanguageInfo;
 
+import java.util.List;
+
 /**
  * The {@code Interpreter} interface defines the basic methods for interpreting code in a programming language.
  *
@@ -16,14 +18,14 @@ public interface Interpreter {
      *
      * @param code the code to be executed by the interpreter.
      */
-    void run(String code);
+    void run(List<String> code);
 
     /**
      * Runs a single line of code using the interpreter.
      *
      * @param line the line of code to be executed by the interpreter.
      */
-    void runLine(String line);
+    void run(String line);
 
     /**
      * Runs a single line of code using the interpreter.
@@ -31,7 +33,7 @@ public interface Interpreter {
      * @param line the line of code to be executed by the interpreter.
      * @param isDebug a flag indicating whether the interpreter should run in debug mode.
      */
-    void runLine(String line, boolean isDebug);
+    void run(String line, boolean isDebug);
 
     /**
      * Enables or disables the debug mode of the interpreter.
