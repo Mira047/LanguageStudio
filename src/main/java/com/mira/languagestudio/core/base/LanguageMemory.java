@@ -1,6 +1,7 @@
 package com.mira.languagestudio.core.base;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * The {@code LanguageMemory} interface defines a memory storage for a programming language.
@@ -38,4 +39,23 @@ public interface LanguageMemory<T> extends Serializable {
     * @param key the key to check for
     */
     boolean contains(T key);
+
+    /**
+     * Adds a statement to the memory.
+     * @param statement the statement to add
+     */
+    void addStatement(Statement statement);
+
+    /**
+     * Removes a statement from the memory.
+     * @param statement the statement to remove
+     */
+    void removeStatement(Statement statement);
+
+    /**
+     * Returns all statements at the specified index.
+     * @param index the index of the statement
+     * @return the statements at the specified index
+     */
+    List<Statement> getStatements(int index);
 }
